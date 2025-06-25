@@ -13,7 +13,7 @@ KeyCop is an automated tool to find leaked API keys on GitHub and notify reposit
 
 1.  Clone the repository:
     ```bash
-    git clone https://github.com/your-username/KeyCop.git
+    git clone https://github.com/2511zzZ/KeyCop.git
     cd KeyCop
     ```
 
