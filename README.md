@@ -5,7 +5,7 @@ KeyCop is an automated tool to find leaked API keys on GitHub and notify reposit
 ## Features
 
 - **Search**: Finds potentially leaked keys using GitHub's code search.
-- **Verify**: Checks if the found keys are active (work in progress).
+- **Verify**: Checks if the found keys are active.
 - **Notify**: Automatically creates a GitHub issue to alert the owner.
 - **Extensible**: Easily add new key types to search for.
 
@@ -19,7 +19,7 @@ KeyCop is an automated tool to find leaked API keys on GitHub and notify reposit
 
 2.  Install dependencies:
     ```bash
-    pip install -r requirements.txt
+    make install
     ```
 
 3.  Set your GitHub API Token:
@@ -29,21 +29,26 @@ KeyCop is an automated tool to find leaked API keys on GitHub and notify reposit
 
 ## Usage
 
-KeyCop is run from the command line.
+KeyCop is run from the command line using Make.
 
 1.  **Search for keys:**
     ```bash
-    python -m keycop.cli search OPENAI
+    # Search for OpenAI keys
+    make search type=OPENAI
     ```
 
 2.  **Verify found keys:**
     ```bash
-    python -m keycop.cli verify
+    make verify
     ```
 
 3.  **Notify owners:**
     ```bash
-    python -m keycop.cli notify
+    # Notify all found repositories
+    make notify
+
+    # Notify a specific repository
+    make notify repo=owner/repo
     ```
 
 ## Disclaimer

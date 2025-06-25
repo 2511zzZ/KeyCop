@@ -46,6 +46,7 @@ class CodeSearcher:
                 headers={"Accept": "application/vnd.github.text-match+json"}
             )
             
+            # todo: Github only returns 1000 results for search API.
             total_count = results.totalCount
             print(f"Found {total_count} total results from GitHub API.")
 
@@ -56,13 +57,12 @@ class CodeSearcher:
             page_num = 0
             processed_count = 0
             # GitHub API returns at most 1000 search results (10 pages of 100)
-            total_pages = total_count // 100 + 1
+            total_pages = (total_count + 99) // 100
 
             while page_num < total_pages:
                 print(f'\n--- Fetching page {page_num + 1}/{total_pages} ---')
                 try:
                     page_results = results.get_page(page_num)
-                    page_num += 1
                 except GithubException as e:
                     if e.status == 403:
                         print("Rate limit likely hit. Sleeping for 60 seconds before retrying...")
@@ -81,17 +81,12 @@ class CodeSearcher:
 
                     # The text_matches attribute is a list of dictionaries when using the manual PaginatedList approach
                     if hasattr(content_file, 'text_matches') and content_file.text_matches:
-                        print(f"[Debug] text_matches found: {content_file.text_matches}")
                         # Use fragments from text match metadata
                         code_snippet = "\n---\n".join([match['fragment'] for match in content_file.text_matches])
                         # Extract key from the first fragment for simplicity
                         extracted_key = self._extract_key_from_fragment(content_file.text_matches[0]['fragment'], key_type)
                     else:
-                        print("[Debug] No text_matches found. Falling back to decoded_content.")
-                        # Fallback to decoded content if no text matches
-                        decoded_content_str = content_file.decoded_content.decode('utf-8', 'ignore')
-                        code_snippet = decoded_content_str
-                        extracted_key = self._extract_key_from_fragment(code_snippet, key_type)
+                        extracted_key = ""
 
                     key_data = {
                         'id': str(uuid.uuid4()),
@@ -105,14 +100,14 @@ class CodeSearcher:
                         'found_at': datetime.utcnow().isoformat(),
                         'last_checked_at': None
                     }
-                    print(f"[Debug] Storing key_data: {key_data}")
                     leaked_keys_store.append(key_data)
                     print(f"Found new potential key in {key_data['repo_full_name']}/{key_data['file_path']}")
 
-                if page_num < total_pages:
-                    # Wait 6 seconds to stay under 10 requests/minute for the search API.
-                    print("Waiting 6 seconds to avoid rate limiting...")
-                    time.sleep(6)
+
+                page_num += 1
+                # Wait 6 seconds to stay under 10 requests/minute for the search API.
+                print("Waiting 6 seconds to avoid rate limiting...")
+                time.sleep(6)
         except GithubException as e:
             print(f"An error occurred while searching GitHub: {e}")
         except Exception as e:
