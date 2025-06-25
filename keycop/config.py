@@ -12,27 +12,13 @@ DATA_DIR = os.path.join(ROOT_DIR, 'data')
 GITHUB_API_TOKEN = os.getenv('GITHUB_API_TOKEN')
 
 # --- Key-specific Configurations ---
-# A dictionary defining the types of keys to search for.
-# Each key type has a pattern, a search query for GitHub, and a verification endpoint.
-KEY_TYPES = {
-    'OPENAI': {
-        'pattern': 'sk-[a-zA-Z0-9]{48}',
-        'search_query': '"OPENAI_API_KEY=sk-" filename:*.py filename:*.js filename:*.ts filename:*.env',
-        'verification_endpoint': 'https://api.openai.com/v1/models'
-    },
-    'GEMINI': {
-        # This is a placeholder pattern and endpoint for Gemini.
-        'pattern': 'AIzaSy[a-zA-Z0-9_-]{33}',
-        'search_query': '"GEMINI_API_KEY="',
-        'verification_endpoint': 'https://generativelanguage.googleapis.com/v1beta/models'
-    }
-    # Add other key types here in the future.
-}
+# This section is now dynamically handled by the provider modules.
 
 # --- Storage Configuration ---
 # Defines the paths for our JSON-based storage files.
 STORAGE_PATHS = {
     'leaked_keys': os.path.join(DATA_DIR, 'leaked_keys.json'),
+    'valid_keys': os.path.join(DATA_DIR, 'valid_keys.json'),
     'processed_repos': os.path.join(DATA_DIR, 'processed_repos.json'),
     'scan_history': os.path.join(DATA_DIR, 'scan_history.json')
 }

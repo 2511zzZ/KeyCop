@@ -18,7 +18,7 @@ class JSONStore:
         os.makedirs(os.path.dirname(self.file_path), exist_ok=True)
         if not os.path.exists(self.file_path):
             # Create an empty list for key storage, or an empty dict for other files.
-            default_content = [] if 'leaked_keys' in self.file_path else {}
+            default_content = [] if self.file_path.endswith('_keys.json') else {}
             self.write_all(default_content)
 
     def read_all(self) -> Any:
@@ -28,7 +28,7 @@ class JSONStore:
                 with open(self.file_path, 'r', encoding='utf-8') as f:
                     return json.load(f)
             except (json.JSONDecodeError, FileNotFoundError):
-                return [] if 'leaked_keys' in self.file_path else {}
+                return [] if self.file_path.endswith('_keys.json') else {}
 
     def write_all(self, data: Any):
         """Writes all content to the JSON file, overwriting existing content."""
