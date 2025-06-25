@@ -16,6 +16,7 @@ def main():
 
     # Notify command
     notify_parser = subparsers.add_parser('notify', help='Notify owners of valid leaked keys.')
+    notify_parser.add_argument('--repo', type=str, help='(Optional) The specific repository to notify (e.g., \'owner/repo\').')
 
     args = parser.parse_args()
 
@@ -27,7 +28,7 @@ def main():
         verifier.run_verification()
     elif args.command == 'notify':
         notifier = Notifier()
-        notifier.run_notification()
+        notifier.run_notification(target_repo=args.repo)
 
 if __name__ == '__main__':
     main()

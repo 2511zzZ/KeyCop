@@ -47,5 +47,4 @@ class JSONStore:
 
 # Instantiate stores for each data file
 leaked_keys_store = JSONStore(STORAGE_PATHS['leaked_keys'])
-processed_repos_store = JSONStore(STORAGE_PATHS['processed_repos'])
-scan_history_store = JSONStore(STORAGE_PATHS['scan_history'])
+valid_keys_store = JSONStore(STORAGE_PATHS['valid_keys'])
